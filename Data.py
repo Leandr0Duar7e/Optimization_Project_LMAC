@@ -5,7 +5,7 @@ from shapely.geometry import Polygon, Point
 
 # Here I want to include all data needed for the project
 def generate_data():
-    # Sales Rep data : ['name', review, experience, {'lat': latitude, 'lon':longitude}, salary]
+    # Sales Rep data : ['name', review, experience, {'lat': latitude, 'lon':longitude}]
     # Defining random sales rep names
     sales_names = []
     for i in range(10):
@@ -72,11 +72,7 @@ def generate_data():
     )
 
     for rep in sales_reps:
-        rep.append(coordinate_generator(usa2))
-
-    # Defining sales reps salary that equals 2000 + (500 x (experience / 5))
-    for rep in sales_reps:
-        rep.append(2000 + (500 * (rep[2] // 5)))
+        rep.append(coordinate_generator(usa2))  # Adding reps locations in usa2 area
 
     # Defining clients random locations
     # Clients are defined by (number, location)
