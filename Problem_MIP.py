@@ -7,7 +7,7 @@ def main():
     # Defining the Data
     # sales_rep = ('name', review, experience, {'lat': latitude, 'lon'= longitude})
     # clients = (number, {'lat': latitude, 'lon'= longitude})
-    sales_rep, clients = generate_data()
+    sales_rep, clients = generate_data(10000, 2)
 
     nbr_sales_rep = len(sales_rep)
     nbr_clients = len(clients)
@@ -33,10 +33,10 @@ def main():
         for client in range(nbr_clients):
             solver.Add(
                 driving_time(
-                    sales_rep[rep][3]["lon"],
                     sales_rep[rep][3]["lat"],
-                    clients[client][1]["lon"],
+                    sales_rep[rep][3]["lon"],
                     clients[client][1]["lat"],
+                    clients[client][1]["lon"],
                 )
                 * x[rep, client]
                 <= 10800

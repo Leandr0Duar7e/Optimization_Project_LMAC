@@ -4,11 +4,11 @@ import random
 from shapely.geometry import Polygon, Point
 
 # Here I want to include all data needed for the project
-def generate_data():
+def generate_data(nr_reps, nr_clients):
     # Sales Rep data : ['name', review, experience, {'lat': latitude, 'lon':longitude}]
     # Defining random sales rep names
     sales_names = []
-    for i in range(10):
+    for i in range(nr_reps):
         sales_names.append(names.get_full_name())
 
     # Defining random sales rep average reviews between 1 and 5
@@ -77,11 +77,11 @@ def generate_data():
     # Defining clients random locations
     # Clients are defined by (number, location)
     clients = []
-    for client in range(50):
+    for client in range(nr_clients):
         clients.append([client, coordinate_generator(usa)])
 
     return (sales_reps, clients)
 
 
 if __name__ == "__main__":
-    generate_data()
+    generate_data(20, 50)
