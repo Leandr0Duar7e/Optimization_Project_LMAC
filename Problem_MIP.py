@@ -31,7 +31,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
             x[rep, client] = solver.IntVar(0, 1, "")
 
     # Treating data problems
-    # Checking if there's any client with no sales_rep within 3 hours driving and assigning it to the closest one
+    # Checking if there's any client taht must be assigned to a certain sales_rep out of the minimum driving distance time
     if index != []:
         for i in index:
             solver.Add(

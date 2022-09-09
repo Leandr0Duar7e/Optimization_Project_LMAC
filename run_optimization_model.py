@@ -12,11 +12,13 @@ from Problem_MIP import *
 from Data import *
 from data_correction import *
 
+# from fixed_vars import *
+
 start_time = time.time()
 
 # Define number of reps and clients
 nr_sales_rep = 50
-nr_clients = 5
+nr_clients = 15
 
 # Define the minimum driving distance in seconds
 min_drive_dst = 10800
@@ -63,15 +65,19 @@ utah = Polygon(
 
 # Generating Data
 sales, clients = generate_data(nr_sales_rep, nr_clients, utah)
+# sales, clients = sales_rep_fixed2, clients_fixed2
 
 # Solving the problem
 indices = list()
 if solve_problem(sales, clients, min_drive_dst, indices) == False:
     print("Treating Data ...")
     indices += data_correction_1(sales, clients, min_drive_dst)
+    print("Done! Let's try to solve this problem again...")
     if solve_problem(sales, clients, min_drive_dst, indices) == False:
-        print("Treating Data ...")
+        print("Treating Data ... \n This one might take a while!")
         indices += data_correction_2(sales, clients, min_drive_dst)
+        print("Done! Let's try to solve this problem again...")
+        print(indices)
         if solve_problem(sales, clients, min_drive_dst, indices) == False:
             print("The problem is impossible to solve! \n Please review the data.")
 

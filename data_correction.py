@@ -39,3 +39,75 @@ def data_correction_1(sales_data, clients_data, driving_data):
             pairs_list.append([j, client])
             print("An error was solved!")
     return pairs_list
+
+
+def data_correction_2(sales_data, clients_data, driving_data):
+    pairs_list = list()
+    nr_sales = len(sales_data)
+    nr_clients = len(clients_data)
+    reps_list = [[] for _ in range(nr_sales)]
+
+    for client in range(nr_clients):
+        options = 0
+        i = 0
+        rep = 0
+        while options < 2 and i < nr_sales:
+            distance = driving_time(
+                sales_data[i][3]["lat"],
+                sales_data[i][3]["lon"],
+                clients_data[client][1]["lat"],
+                clients_data[client][1]["lon"],
+            )
+            if distance <= driving_data:
+                options += 1
+                rep = i
+            i += 1
+        if options == 1:
+            reps_list[rep].append(client)
+
+    for rep in range(nr_sales):
+        nr = len(reps_list[rep])
+        while nr > (8 - sales_data[rep][4] * 4):
+            print("nr =", nr)
+            furthest = 0
+            dst3 = driving_time(
+                sales_data[rep][3]["lat"],
+                sales_data[rep][3]["lon"],
+                clients_data[reps_list[rep][furthest]][1]["lat"],
+                clients_data[reps_list[rep][furthest]][1]["lon"],
+            )
+            closest = 10000000
+            for client in range(nr - 1):
+                dst1 = driving_time(
+                    sales_data[rep][3]["lat"],
+                    sales_data[rep][3]["lon"],
+                    clients_data[reps_list[rep][furthest]][1]["lat"],
+                    clients_data[reps_list[rep][furthest]][1]["lon"],
+                )
+                print("dst1 =", dst1)
+                dst2 = driving_time(
+                    sales_data[rep][3]["lat"],
+                    sales_data[rep][3]["lon"],
+                    clients_data[reps_list[rep][client + 1]][1]["lat"],
+                    clients_data[reps_list[rep][client + 1]][1]["lon"],
+                )
+                print("dst2 =", dst2)
+                if dst2 > dst1:
+                    furthest = client + 1
+                    dst3 = dst2
+                    print("dst3 =", dst3)
+            for s in range(nr_sales):
+                dst4 = driving_time(
+                    sales_data[s][3]["lat"],
+                    sales_data[s][3]["lon"],
+                    clients_data[reps_list[rep][furthest]][1]["lat"],
+                    clients_data[reps_list[rep][furthest]][1]["lon"],
+                )
+                if dst4 < closest and dst4 > dst3:
+                    closest = dst4
+                    take = s
+                    print("rep", s)
+            nr -= 1
+            pairs_list.append([take, reps_list[rep].pop(furthest)])
+            print("An error was solved!")
+    return pairs_list
