@@ -3,12 +3,13 @@
 # The minimum driving distance between client and rep.
 #
 # After defining the model will be run and if there's no solution,
-# data will be treated and a solution must arise
+# data will be treated and a solution must arise within two attempts
 #
 # If there's no solution at the end than the Data given does not make sense
 
 from Problem_MIP import *
 from Data import *
+from data_correction import *
 
 start_time = time.time()
 
@@ -63,7 +64,9 @@ utah = Polygon(
 sales, clients = generate_data(nr_sales_rep, nr_clients, utah)
 
 # Solving the problem
-solve_problem(sales, clients, min_drive_dst)
+if solve_problem(sales, clients, min_drive_dst) == False:
+    print("Treating Data")
+
 
 # Printing execution time
 print("--- --- --- \n Execution time = %s seconds " % round((time.time() - start_time)))

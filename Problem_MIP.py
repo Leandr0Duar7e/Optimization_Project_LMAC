@@ -37,7 +37,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst):
         i = 0
         j = 0  # indice of the closest sales rep
         distance = min_driving_dst + 1
-        closest_rep = 1000000  # A never possible driving distance in seconds
+        closest_rep = 10000000  # A never possible driving distance in seconds
         while distance > min_driving_dst and i < nbr_sales_rep:
             distance = driving_time(
                 sales_rep[i][3]["lat"],
@@ -125,5 +125,5 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst):
                     )
         return True
     else:
-        print("No solution found. \n Treating Data")
+        print("No solution found.")
         return False
