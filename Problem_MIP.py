@@ -5,7 +5,6 @@ from adittional_functions import *
 
 # from fixed_vars import *
 import copy
-import time
 
 
 def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst):

@@ -1,3 +1,5 @@
+### I used this file just to debug the code and solve problems with a small set of data
+
 from adittional_functions import *
 
 # Defining minimum driving distance between sales_rep and client

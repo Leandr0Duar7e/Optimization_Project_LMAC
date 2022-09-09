@@ -7,6 +7,7 @@
 #
 # If there's no solution at the end than the Data given does not make sense
 
+import time
 from Problem_MIP import *
 from Data import *
 from data_correction import *
