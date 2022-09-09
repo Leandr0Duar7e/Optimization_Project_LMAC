@@ -2,19 +2,16 @@ from turtle import distance
 from ortools.linear_solver import pywraplp
 from Data import *
 from adittional_functions import *
-from fixed_vars import *
+
+# from fixed_vars import *
 import copy
 import time
 
 
-def main():
-    start_time = time.time()
-    # Defining the Data
+def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst):
+    # Data
     # sales_rep = ('name', review, experience, {'lat': latitude, 'lon'= longitude})
     # clients = (number, {'lat': latitude, 'lon'= longitude})
-
-    # sales_rep_fixed, clients_fixed = generate_data(10000, 2) # Data that won't be changed in the function
-    # sales_rep, clients = sales_rep_fixed, clients_fixed
 
     # Using a fixed set of data to develop the model. See the data on fixed_vars file
     sales_rep = copy.deepcopy(sales_rep_fixed)
@@ -39,9 +36,9 @@ def main():
     for client in range(nbr_clients):
         i = 0
         j = 0  # indice of the closest sales rep
-        distance = min_distance + 1
+        distance = min_driving_dst + 1
         closest_rep = 1000000  # A never possible driving distance in seconds
-        while distance > min_distance and i < nbr_sales_rep:
+        while distance > min_driving_dst and i < nbr_sales_rep:
             distance = driving_time(
                 sales_rep[i][3]["lat"],
                 sales_rep[i][3]["lon"],
@@ -54,7 +51,9 @@ def main():
                 closest_rep = distance
                 j = i
             i += 1
-        if i == nbr_sales_rep:
+        if (
+            i == nbr_sales_rep and closest_rep > min_driving_dst
+        ):  # Both conditions to prevent the case that the last rep on the list is within the minimum driving time
             solver.Add(
                 x[j, client] == 1
             )  # making mandatory that this client is associated with the closest rep
@@ -80,11 +79,14 @@ def main():
                 clients[client][1]["lat"],
                 clients[client][1]["lon"],
             )
-            solver.Add(driving_dst * x[rep, client] <= 10800)
+            solver.Add(driving_dst * x[rep, client] <= min_driving_dst)
 
-    # Each sales_rep working full_time can have at most 8 clients assigned
+    # Each sales_rep working full_time can have at most 8 clients assigned and part_time can have at most 4
     for rep in range(nbr_sales_rep):
-        solver.Add(solver.Sum([x[rep, client] for client in range(nbr_clients)]) <= 8)
+        solver.Add(
+            solver.Sum([x[rep, client] for client in range(nbr_clients)])
+            <= (8 - 4 * sales_rep[rep][4])
+        )
 
     # Objective
     objective_terms = []
@@ -121,12 +123,7 @@ def main():
                         f"Sales rep {sales_rep[rep][0]} assigned to client {clients[client][0]}."
                         + f"\n Driving distance: {hours}h {minutes}m {seconds}s \n"
                     )
+        return True
     else:
-        print("No solution found.")
-
-    # Printing execution time
-    print("Execution time = %s seconds " % round((time.time() - start_time)))
-
-
-if __name__ == "__main__":
-    main()
+        print("No solution found. \n Treating Data")
+        return False
