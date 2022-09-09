@@ -3,19 +3,22 @@ from ortools.linear_solver import pywraplp
 from Data import *
 from adittional_functions import *
 from fixed_vars import *
+import copy
+import time
 
 
 def main():
+    start_time = time.time()
     # Defining the Data
     # sales_rep = ('name', review, experience, {'lat': latitude, 'lon'= longitude})
     # clients = (number, {'lat': latitude, 'lon'= longitude})
 
-    # data = generate_data(10000, 2) # Data that won't be changed in the function
-    # sales_rep, clients = data
+    # sales_rep_fixed, clients_fixed = generate_data(10000, 2) # Data that won't be changed in the function
+    # sales_rep, clients = sales_rep_fixed, clients_fixed
 
     # Using a fixed set of data to develop the model. See the data on fixed_vars file
-    sales_rep = sales_rep_fixed
-    clients = clients_fixed
+    sales_rep = copy.deepcopy(sales_rep_fixed)
+    clients = copy.deepcopy(clients_fixed)
 
     nbr_sales_rep = len(sales_rep)
     nbr_clients = len(clients)
@@ -33,11 +36,11 @@ def main():
 
     # Treating data problems
     # Checking if there's any client with no sales_rep within 3 hours driving and assigning it to the closest one
-    distance = min_distance + 1
-    closest_rep = 1000000  # A never possivble driving distance in seconds
     for client in range(nbr_clients):
         i = 0
         j = 0  # indice of the closest sales rep
+        distance = min_distance + 1
+        closest_rep = 1000000  # A never possible driving distance in seconds
         while distance > min_distance and i < nbr_sales_rep:
             distance = driving_time(
                 sales_rep[i][3]["lat"],
@@ -60,6 +63,8 @@ def main():
             ]  # Reduce the distance so it does not cause problems in the driving time constraint
             clients[client][1]["lon"] = sales_rep[j][3]["lon"]
             print("!Too Far!")
+        else:
+            print("Sales Rep found")
 
     # Constraints
     # Each client is assigned to exactly one sales rep
@@ -104,17 +109,23 @@ def main():
                 # Testing if x[i,j] is 1(with tolerance for floating point arithmetic)
                 if x[rep, client].solution_value() > 0.5:
                     dst = driving_time(
-                        sales_rep[rep][3]["lat"],
-                        sales_rep[rep][3]["lon"],
-                        clients[client][1]["lat"],
-                        clients[client][1]["lon"],
+                        sales_rep_fixed[rep][3]["lat"],
+                        sales_rep_fixed[rep][3]["lon"],
+                        clients_fixed[client][1]["lat"],
+                        clients_fixed[client][1]["lon"],
                     )
+                    hours = round(dst // 3600)
+                    minutes = round((dst % 3600) // 60)
+                    seconds = round(((dst % 3600) % 60) * 60)
                     print(
                         f"Sales rep {sales_rep[rep][0]} assigned to client {clients[client][0]}."
-                        + f"\n Driving distance: {dst} seconds \n"
+                        + f"\n Driving distance: {hours}h {minutes}m {seconds}s \n"
                     )
     else:
         print("No solution found.")
+
+    # Printing execution time
+    print("Execution time = %s seconds " % round((time.time() - start_time)))
 
 
 if __name__ == "__main__":
