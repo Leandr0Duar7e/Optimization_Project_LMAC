@@ -71,14 +71,25 @@ def generate_data(nr_reps, nr_clients):
         ]
     )
 
+    utah = Polygon(
+        [
+            (41.971607, -113.999901),
+            (41.990605, -111.061827),
+            (40.994451, -111.051102),
+            (41.000347, -109.050359),
+            (36.999538, -109.046141),
+            (37.005644, -114.040360),
+        ]
+    )
+
     for rep in sales_reps:
-        rep.append(coordinate_generator(usa2))  # Adding reps locations in usa2 area
+        rep.append(coordinate_generator(utah))  # Adding reps locations in usa2 area
 
     # Defining clients random locations
     # Clients are defined by (number, location)
     clients = []
     for client in range(nr_clients):
-        clients.append([client, coordinate_generator(usa)])
+        clients.append([client, coordinate_generator(utah)])
 
     return (sales_reps, clients)
 
