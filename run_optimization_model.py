@@ -65,8 +65,15 @@ utah = Polygon(
 sales, clients = generate_data(nr_sales_rep, nr_clients, utah)
 
 # Solving the problem
-if solve_problem(sales, clients, min_drive_dst) == False:
-    print("Treating Data")
+indices = list()
+if solve_problem(sales, clients, min_drive_dst, indices) == False:
+    print("Treating Data ...")
+    indices += data_correction_1(sales, clients, min_drive_dst)
+    if solve_problem(sales, clients, min_drive_dst, indices) == False:
+        print("Treating Data ...")
+        indices += data_correction_2(sales, clients, min_drive_dst)
+        if solve_problem(sales, clients, min_drive_dst, indices) == False:
+            print("The problem is impossible to solve! \n Please review the data.")
 
 
 # Printing execution time

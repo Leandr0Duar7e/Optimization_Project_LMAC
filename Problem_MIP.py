@@ -7,7 +7,7 @@ from adittional_functions import *
 import copy
 
 
-def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst):
+def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
     # Data
     # sales_rep = ('name', review, experience, {'lat': latitude, 'lon'= longitude})
     # clients = (number, {'lat': latitude, 'lon'= longitude})
@@ -32,37 +32,15 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst):
 
     # Treating data problems
     # Checking if there's any client with no sales_rep within 3 hours driving and assigning it to the closest one
-    for client in range(nbr_clients):
-        i = 0
-        j = 0  # indice of the closest sales rep
-        distance = min_driving_dst + 1
-        closest_rep = 10000000  # A never possible driving distance in seconds
-        while distance > min_driving_dst and i < nbr_sales_rep:
-            distance = driving_time(
-                sales_rep[i][3]["lat"],
-                sales_rep[i][3]["lon"],
-                clients[client][1]["lat"],
-                clients[client][1]["lon"],
-            )
-            if (
-                distance < closest_rep
-            ):  # ignoring the possibility of two different sales_rep at the same driving distance from this client
-                closest_rep = distance
-                j = i
-            i += 1
-        if (
-            i == nbr_sales_rep and closest_rep > min_driving_dst
-        ):  # Both conditions to prevent the case that the last rep on the list is within the minimum driving time
+    if index != []:
+        for i in index:
             solver.Add(
-                x[j, client] == 1
-            )  # making mandatory that this client is associated with the closest rep
-            clients[client][1]["lat"] = sales_rep[j][3][
+                x[i[0], i[1]] == 1
+            )  # making mandatory that client i[1] is associated with the closest rep
+            clients[i[1]][1]["lat"] = sales_rep[i[0]][3][
                 "lat"
             ]  # Reduce the distance so it does not cause problems in the driving time constraint
-            clients[client][1]["lon"] = sales_rep[j][3]["lon"]
-            print("!Too Far!")
-        else:
-            print("Sales Rep found")
+            clients[i[1]][1]["lon"] = sales_rep[i[0]][3]["lon"]
 
     # Constraints
     # Each client is assigned to exactly one sales rep
