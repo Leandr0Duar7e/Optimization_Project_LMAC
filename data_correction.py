@@ -68,7 +68,7 @@ def data_correction_2(sales_data, clients_data, driving_data):
     for rep in range(nr_sales):
         nr = len(reps_list[rep])
         while nr > (8 - sales_data[rep][4] * 4):
-            print("nr =", nr)
+            # print("nr =", nr)
             furthest = 0
             dst3 = driving_time(
                 sales_data[rep][3]["lat"],
@@ -84,18 +84,18 @@ def data_correction_2(sales_data, clients_data, driving_data):
                     clients_data[reps_list[rep][furthest]][1]["lat"],
                     clients_data[reps_list[rep][furthest]][1]["lon"],
                 )
-                print("dst1 =", dst1)
+                # print("dst1 =", dst1)
                 dst2 = driving_time(
                     sales_data[rep][3]["lat"],
                     sales_data[rep][3]["lon"],
                     clients_data[reps_list[rep][client + 1]][1]["lat"],
                     clients_data[reps_list[rep][client + 1]][1]["lon"],
                 )
-                print("dst2 =", dst2)
+                # print("dst2 =", dst2)
                 if dst2 > dst1:
                     furthest = client + 1
                     dst3 = dst2
-                    print("dst3 =", dst3)
+                    # print("dst3 =", dst3)
             for s in range(nr_sales):
                 dst4 = driving_time(
                     sales_data[s][3]["lat"],
@@ -106,7 +106,7 @@ def data_correction_2(sales_data, clients_data, driving_data):
                 if dst4 < closest and dst4 > dst3:
                     closest = dst4
                     take = s
-                    print("rep", s)
+                    # print("rep", s)
             nr -= 1
             pairs_list.append([take, reps_list[rep].pop(furthest)])
             print("An error was solved!")

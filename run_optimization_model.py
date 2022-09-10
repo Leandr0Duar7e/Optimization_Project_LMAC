@@ -17,51 +17,11 @@ from data_correction import *
 start_time = time.time()
 
 # Define number of reps and clients
-nr_sales_rep = 5
-nr_clients = 4
+nr_sales_rep = 40
+nr_clients = 70
 
 # Define the minimum driving distance in seconds
 min_drive_dst = 10800
-
-# Defining an area that simulates the USA with points as (latitude, longitude)
-usa = Polygon(
-    [
-        (48, -124),
-        (48, -95),
-        (41, -83),
-        (44, -67),
-        (29, -82),
-        (29, -98),
-        (33, -117),
-        (40, -123),
-    ]
-)
-
-# Defining an area that represents California, Utah, Arizona and Nevada
-usa2 = Polygon(
-    [
-        (41.909652, -124.137352),
-        (41.951336, -111.105839),
-        (40.939755, -111.114648),
-        (40.970688, -109.086878),
-        (31.363741, -109.068074),
-        (31.374897, -111.067022),
-        (32.769783, -114.712162),
-        (32.639949, -117.054591),
-    ]
-)
-
-# Defining the area of Utah
-utah = Polygon(
-    [
-        (41.971607, -113.999901),
-        (41.990605, -111.061827),
-        (40.994451, -111.051102),
-        (41.000347, -109.050359),
-        (36.999538, -109.046141),
-        (37.005644, -114.040360),
-    ]
-)
 
 # Generating Data
 sales, clients = generate_data(nr_sales_rep, nr_clients, utah)

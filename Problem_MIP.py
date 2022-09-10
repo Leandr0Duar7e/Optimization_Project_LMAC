@@ -83,6 +83,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
     status = solver.Solve()
 
     if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
+        working_reps = 0
         for rep in range(nbr_sales_rep):
             show = 0
             for client in range(nbr_clients):
@@ -111,6 +112,12 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
                         f"Client {clients[client][0]} -> Driving distance: {hours}h {minutes}m {seconds}s"
                     )
                     show += 1
+            if show > 0:
+                working_reps += 1
+        print(
+            f"\nWorkforce optimization from {nbr_sales_rep} to {working_reps} sales representatives."
+        )
+
         return x
     else:
         print("No solution found.")
