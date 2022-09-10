@@ -106,12 +106,12 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
                             print(" full time.")
                         else:
                             print(" part time.")
-                        print(f"List of clients assigned to {sales_rep[rep][0]}:")
+                        print(f"List of clients assigned to {sales_rep[rep][0]}:\n")
                     print(
-                        f"{clients[client][0]} -> Driving distance: {hours}h {minutes}m {seconds}s \n"
+                        f"Client {clients[client][0]} -> Driving distance: {hours}h {minutes}m {seconds}s"
                     )
                     show += 1
-        return True
+        return x
     else:
         print("No solution found.")
         return False
