@@ -17,7 +17,7 @@ from data_correction import *
 start_time = time.time()
 
 # Define number of reps and clients
-nr_sales_rep = 3
+nr_sales_rep = 10
 nr_clients = 5
 
 # Define the minimum driving distance in seconds

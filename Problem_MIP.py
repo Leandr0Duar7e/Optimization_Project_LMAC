@@ -84,6 +84,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
 
     if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
         for rep in range(nbr_sales_rep):
+            show = 0
             for client in range(nbr_clients):
                 # Testing if x[i,j] is 1(with tolerance for floating point arithmetic)
                 if x[rep, client].solution_value() > 0.5:
@@ -96,10 +97,20 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
                     hours = round(dst // 3600)
                     minutes = round((dst % 3600) // 60)
                     seconds = round(((dst % 3600) % 60) * 60)
+                    if show < 1:
+                        print(
+                            f"\nSales rep: {sales_rep[rep][0]}   ||  Average review: {sales_rep[rep][1]}   ||  Years of Experience: {sales_rep[rep][2]}  || Working",
+                            end="",
+                        )
+                        if sales_rep[rep][4] == 0:
+                            print(" full time.")
+                        else:
+                            print(" part time.")
+                        print(f"List of clients assigned to {sales_rep[rep][0]}:")
                     print(
-                        f"Sales rep {sales_rep[rep][0]} assigned to client {clients[client][0]}."
-                        + f"\n Driving distance: {hours}h {minutes}m {seconds}s \n"
+                        f"{clients[client][0]} -> Driving distance: {hours}h {minutes}m {seconds}s \n"
                     )
+                    show += 1
         return True
     else:
         print("No solution found.")
