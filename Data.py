@@ -1,10 +1,14 @@
+### In this file I am generating random data of clients and sales rep
+### The data is registered in the file "last_data_used.txt" to be consulted if needed
+### The Data is deleted and overwrited each time this file runs
+
 import numpy as np
 import names
 import random
 from shapely.geometry import Polygon
 from adittional_functions import *
 
-# Here I want to include all data needed for the project
+
 def generate_data(nr_reps, nr_clients, area):
     # Sales Rep data : ['name', review, experience, {'lat': latitude, 'lon':longitude}, Full/Part time]
     # Defining random sales rep names
@@ -31,12 +35,22 @@ def generate_data(nr_reps, nr_clients, area):
 
     # Defining if the employee is working part-time or full-time will affect the maximum number of clients he/she can be assigned to
     for rep in sales_reps:
-        rep.append(random.randint(0, 1))  # 0 == Full ; 1 == Part
+        rep.append(random.randint(0, 1))  # 0 == Full-time ; 1 == Part-time
 
     # Defining clients random locations
     # Clients are defined by (number, location)
     clients = []
     for client in range(nr_clients):
         clients.append([client, coordinate_generator(area)])
+
+    last_data_used = open("last_data_used.txt", "w")
+    last_data_used.write("List of all Sales Representatives : \n \n")
+    for rep in sales_reps:
+        last_data_used.write(f"{rep} \n")
+    last_data_used.write("\n List of all Clients : \n \n")
+    for client in clients:
+        last_data_used.write(f"{client} \n")
+    # last_data_used.write(f"{sales_reps} \n {clients}")
+    last_data_used.close()
 
     return (sales_reps, clients)

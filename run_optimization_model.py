@@ -17,8 +17,8 @@ from data_correction import *
 start_time = time.time()
 
 # Define number of reps and clients
-nr_sales_rep = 50
-nr_clients = 15
+nr_sales_rep = 3
+nr_clients = 5
 
 # Define the minimum driving distance in seconds
 min_drive_dst = 10800
@@ -68,6 +68,10 @@ sales, clients = generate_data(nr_sales_rep, nr_clients, utah)
 # sales, clients = sales_rep_fixed2, clients_fixed2
 
 # Solving the problem
+if nr_clients <= 0 or nr_sales_rep <= 0 or min_drive_dst <= 0:
+    print("Data does not make sense")
+    exit()
+
 indices = list()
 if solve_problem(sales, clients, min_drive_dst, indices) == False:
     print("Treating Data ...")
@@ -77,7 +81,7 @@ if solve_problem(sales, clients, min_drive_dst, indices) == False:
         print("Treating Data ... \n This one might take a while!")
         indices += data_correction_2(sales, clients, min_drive_dst)
         print("Done! Let's try to solve this problem again...")
-        print(indices)
+        # print(indices)
         if solve_problem(sales, clients, min_drive_dst, indices) == False:
             print("The problem is impossible to solve! \n Please review the data.")
 

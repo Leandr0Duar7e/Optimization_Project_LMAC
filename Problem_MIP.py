@@ -83,8 +83,8 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
     status = solver.Solve()
 
     if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
-        for client in range(nbr_clients):
-            for rep in range(nbr_sales_rep):
+        for rep in range(nbr_sales_rep):
+            for client in range(nbr_clients):
                 # Testing if x[i,j] is 1(with tolerance for floating point arithmetic)
                 if x[rep, client].solution_value() > 0.5:
                     dst = driving_time(
