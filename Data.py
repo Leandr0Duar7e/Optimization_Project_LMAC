@@ -2,7 +2,6 @@
 ### The data is registered in the file "last_data_used.txt" to be consulted if needed
 ### The Data is deleted and overwrited each time this file runs
 
-import numpy as np
 import names
 import random
 from shapely.geometry import Polygon
@@ -94,5 +93,17 @@ utah = Polygon(
         (41.000347, -109.050359),
         (36.999538, -109.046141),
         (37.005644, -114.040360),
+    ]
+)
+
+portugal_sul = Polygon(
+    [
+        (37.958085, -8.884172),
+        (37.898001, -8.756783),
+        (37.085305, -8.782972),
+        (37.168827, -8.375586),
+        (37.192011, -7.435687),
+        (37.559599, -7.577416),
+        (37.937197, -7.307499),
     ]
 )

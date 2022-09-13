@@ -21,13 +21,4 @@ clients_fixed2 = (
     [4, {"lat": 37.625634, "lon": -109.859788}],
 )
 
-"""for rep in sales_rep_fixed:
-    for client in clients_fixed:
-        dst = driving_time(
-            rep[3]["lat"],
-            rep[3]["lon"],
-            client[1]["lat"],
-            client[1]["lon"],
-        )
-        if dst <= min_distance:
-            print("Possible")"""
+

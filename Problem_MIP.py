@@ -97,7 +97,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
                     )
                     hours = round(dst // 3600)
                     minutes = round((dst % 3600) // 60)
-                    seconds = round(((dst % 3600) % 60) * 60)
+                    seconds = round((dst % 3600) % 60)
                     if show < 1:
                         print(
                             f"\nSales rep: {sales_rep[rep][0]}   ||  Average review: {sales_rep[rep][1]}   ||  Years of Experience: {sales_rep[rep][2]}  || Working",
