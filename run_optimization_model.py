@@ -12,25 +12,29 @@ from Problem_MIP import *
 from Data import *
 from data_correction import *
 
-# from fixed_vars import *
+from fixed_vars import *
 
 start_time = time.time()
 
 # Define number of reps and clients
 nr_sales_rep = 7
-nr_clients = 10
+nr_clients = 5
 
 # Define the minimum driving distance in seconds
 min_drive_dst = 10800
 
 # Generating Data
-sales, clients = generate_data(nr_sales_rep, nr_clients, utah)
-# sales, clients = sales_rep_fixed2, clients_fixed2
+# sales, clients = generate_data(nr_sales_rep, nr_clients, utah)
+
+sales, clients = sales_rep_fixed2, clients_fixed2
 
 # Solving the problem
 if nr_clients <= 0 or nr_sales_rep <= 0 or min_drive_dst <= 0:
     print("Data does not make sense")
     exit()
+
+# Showing the data in a graph
+
 
 indices = list()
 if solve_problem(sales, clients, min_drive_dst, indices) == False:

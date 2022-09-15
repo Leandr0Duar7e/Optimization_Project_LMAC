@@ -37,7 +37,9 @@ def data_correction_1(sales_data, clients_data, driving_data):
             i == nr_sales and closest_rep > driving_data
         ):  # Both conditions to prevent the case that the last rep on the list is within the minimum driving time
             pairs_list.append([j, client])
-            print("An error was solved!")
+            print(
+                f"An error was solved!\nClient {client} location is too far to be adressed."
+            )
     return pairs_list
 
 
@@ -108,6 +110,8 @@ def data_correction_2(sales_data, clients_data, driving_data):
                     take = s
                     # print("rep", s)
             nr -= 1
+            print(
+                f"An error was solved!\nClient {reps_list[rep][furthest]} location is too far to be adressed."
+            )
             pairs_list.append([take, reps_list[rep].pop(furthest)])
-            print("An error was solved!")
     return pairs_list
