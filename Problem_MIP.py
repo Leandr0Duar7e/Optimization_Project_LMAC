@@ -1,15 +1,35 @@
 from ortools.linear_solver import pywraplp
 from Data import *
 from adittional_functions import *
+from configparser import ConfigParser
+import os
 
 # from fixed_vars import *
 import copy
 
 
-def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
+def solve_problem(sales_rep_fixed, clients_fixed, max_driving_dst, index):
+    """MIP Solver optimizing the number of sales reps needed to address all clients
+    Given variables, constraints and an objective function the solver returns
+    the associations between clients and reps
+
+    Args:
+        sales_rep_fixed (list): list of sales reps
+        clients_fixed (list): list of clients
+        max_driving_dst (int): maximum driving time in seconds
+        index (list): list of clients to be removed from data
+
+    Returns:
+        dict: matrix of boolean variables indicating if a client is associated with a sales rep
+    """
     # Data
     # sales_rep = ('name', review, experience, {'lat': latitude, 'lon'= longitude})
     # clients = (number, {'lat': latitude, 'lon'= longitude})
+
+    CONFIG_PATH = os.getcwd() + r"/config.ini"
+
+    config = ConfigParser()
+    config.read(CONFIG_PATH)
 
     # Using a fixed set of data to develop the model. See the data on fixed_vars file
     sales_rep = copy.deepcopy(
@@ -17,10 +37,12 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
     )  # deepcopy to maintain the driving distance data that can be changed to zero in problematic cases
     clients = copy.deepcopy(clients_fixed)
 
+    # Treating Data
+    # Check if there is any client to be removed
     if index != []:
         update = 0
         for i in index:
-            clients.pop(i[1] - update)
+            clients.pop(i - update)
             update += 1
 
     nbr_sales_rep = len(sales_rep)
@@ -37,18 +59,6 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
         for client in range(nbr_clients):
             x[rep, client] = solver.IntVar(0, 1, "")
 
-    # Treating data problems
-    # Checking if there's any client taht must be assigned to a certain sales_rep out of the minimum driving distance time
-    # if index != []:
-    #   for i in index:
-    #      solver.Add(
-    #         x[i[0], i[1]] == 1
-    #    )  # making mandatory that client i[1] is associated with the closest rep
-    #   clients[i[1]][1]["lat"] = sales_rep[i[0]][3][
-    #      "lat"
-    # ]  # Reduce the distance so it does not cause problems in the driving time constraint
-    # clients[i[1]][1]["lon"] = sales_rep[i[0]][3]["lon"]
-
     # Constraints
     # Each client is assigned to exactly one sales rep
     for client in range(nbr_clients):
@@ -63,7 +73,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
                 clients[client][1]["lat"],
                 clients[client][1]["lon"],
             )
-            solver.Add(driving_dst * x[rep, client] <= min_driving_dst)
+            solver.Add(driving_dst * x[rep, client] <= max_driving_dst)
 
     # Each sales_rep working full_time can have at most 8 clients assigned and part_time can have at most 4
     for rep in range(nbr_sales_rep):
@@ -80,7 +90,12 @@ def solve_problem(sales_rep_fixed, clients_fixed, min_driving_dst, index):
                 x[rep, client]
                 * (
                     1
-                    - (0.75 * (sales_rep[rep][1] / 5) + 0.25 * (sales_rep[rep][2] / 25))
+                    - (
+                        float(config.get("OPTIMIZER", "AVERAGE_REVIEW_WEIGHT"))
+                        * (sales_rep[rep][1] / 5)
+                        + float(config.get("OPTIMIZER", "EXPERIENCE_WEIGHT"))
+                        * (sales_rep[rep][2] / 25)
+                    )
                 )  # Establishing the differentiator factors between  sales_rep being those reviews and experience with different levels of impact
             )
     solver.Minimize(solver.Sum(objective_terms))

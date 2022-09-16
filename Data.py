@@ -2,19 +2,31 @@
 ### The data is registered in the file "last_data_used.txt" to be consulted if needed
 ### The Data is deleted and overwrited each time this file runs
 
+from pickle import FALSE
 from socket import AF_X25
 import names
 import random
 from shapely.geometry import Polygon
 from adittional_functions import *
-import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.image as img
 
 
 def generate_data(nr_reps, nr_clients, area):
-    # Sales Rep data : ['name', review, experience, {'lat': latitude, 'lon':longitude}, Full/Part time]
+    """Function that generates the data to be used on the problem
+    Data is randomly generated with the following format
+    Sales Rep data : ['name', review, experience, {'lat': latitude, 'lon':longitude}, Full/Part time]
+    Clients Data : [number id, {'lat': latitude, 'lon':longitude}]
+
+
+    Args:
+        nr_reps (int): number of sales representatives to be generated
+        nr_clients (int): number of clients to be generated
+        area (Polygon): _description_
+
+    Returns:
+        (list, list): lists of lists with sales reps and clients data
+    """
     # Defining random sales rep names
     sales_names = []
     for i in range(nr_reps):
@@ -34,34 +46,39 @@ def generate_data(nr_reps, nr_clients, area):
         )  # zero corresponds to less than an year of experience and 25 is the maximum
 
     # Defining random sales rep location
-    for rep in sales_reps:
-        rep.append(coordinate_generator(area))
+    for rep in range(nr_reps):
+        sales_reps[rep].append(coordinate_generator(area, rep))
 
-    # Adding reps locations in usa2 area
     # Defining if the employee is working part-time or full-time will affect the maximum number of clients he/she can be assigned to
     for rep in sales_reps:
         rep.append(random.randint(0, 1))  # 0 == Full-time ; 1 == Part-time
 
     # Defining clients random locations
-    # Clients are defined by (number, location)
     clients = []
     for client in range(nr_clients):
-        clients.append([client, coordinate_generator(area)])
+        clients.append([client, coordinate_generator(area, client)])
 
+    # Creating a .txt document to register the data generated
     last_data_used = open("last_data_used.txt", "w")
     last_data_used.write("List of all Sales Representatives : \n \n")
     for rep in sales_reps:
-        last_data_used.write(f"{rep} \n")
+        last_data_used.write(f"{rep},\n")
     last_data_used.write("\n List of all Clients : \n \n")
     for client in clients:
-        last_data_used.write(f"{client} \n")
-    # last_data_used.write(f"{sales_reps} \n {clients}")
+        last_data_used.write(f"{client},\n")
     last_data_used.close()
 
     return (sales_reps, clients)
 
 
 def visualize_data(sales_rep, clients, area):
+    """This function aimes to show the map of the business area with the clients and sales team locations marked
+
+    Args:
+        sales_rep (list): List of sales rep data
+        clients (list): list of clients data
+        area (Polygon): business area
+    """
     # Extract the point values that define the perimeter of the polygon
     area_latitude, area_longitude = area.exterior.coords.xy
 
@@ -74,9 +91,7 @@ def visualize_data(sales_rep, clients, area):
     )
 
     # state of utah image
-    utha = img.imread("utah.png")
-
-    fig, ax = plt.subplots(figsize=(8, 12))
+    # utha = img.imread("utah.png")
 
     # Defining clients and reps coordintes
     clients_lat = list()
@@ -90,14 +105,16 @@ def visualize_data(sales_rep, clients, area):
         clients_lat.append(client[1]["lat"])
         clients_lon.append(client[1]["lon"])
 
-    ax.scatter(sales_lon, sales_lat, zorder=1, alpha=0.2, c="b", s=10)
-    ax.scatter(sales_lon, sales_lat, zorder=1, alpha=0.2, c="r", s=10)
+    im = plt.imread("south_carolina.png")
 
-    ax.set_title("Plotting Sales Reps and Clients locations")
-    ax.set_xlim(bbox[0], bbox[1])
-    ax.set_ylim(bbox[2], bbox[3])
+    plt.scatter(clients_lon, clients_lat, c="g", marker="X", s=50)
+    plt.scatter(sales_lon, sales_lat, c="b", marker="o", alpha=0.6)
 
-    ax.imshow(utah, zorder=0, extent=bbox, aspect="equal")
+    plt.title("Sales Reps and Clients locations")
+    plt.xlim(bbox[0], bbox[1])
+    plt.ylim(bbox[2], bbox[3])
+    plt.imshow(im)
+    plt.show()
 
 
 # Defining different geographical areas
@@ -141,14 +158,11 @@ utah = Polygon(
     ]
 )
 
-portugal_sul = Polygon(
+south_carolina = Polygon(
     [
-        (37.958085, -8.884172),
-        (37.898001, -8.756783),
-        (37.085305, -8.782972),
-        (37.168827, -8.375586),
-        (37.192011, -7.435687),
-        (37.559599, -7.577416),
-        (37.937197, -7.307499),
+        (32.113859, -80.959657),
+        (34.743249, -83.081187),
+        (34.999217, -81.162450),
+        (33.866511, -78.697035),
     ]
 )

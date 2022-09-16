@@ -1,43 +1,45 @@
-### In this file you can define: number of sales representatives;
-# Number of clients; The geographical area to work on;
-# The minimum driving distance between client and rep.
-#
-# After defining the model will be run and if there's no solution,
-# data will be treated and a solution must arise within two attempts
-#
-# If there's no solution at the end than the Data given does not make sense
+### This is the main file were other files' functions are called
+### Data will be generated, treated if necessary and the a solution will arise from our model's solver
 
 import time
 from Problem_MIP import *
 from Data import *
 from data_correction import *
+from configparser import ConfigParser
+import os
 
-from fixed_vars import *
+# from fixed_vars import *
 
 start_time = time.time()
 
-# Define number of reps and clients
-nr_sales_rep = 7
-nr_clients = 5
+# Getting the number of reps and clients and the minimum driving distanve from config.ini file
+CONFIG_PATH = os.getcwd() + r"/config.ini"
 
-# Define the minimum driving distance in seconds
-min_drive_dst = 10800
+config = ConfigParser()
+config.read(CONFIG_PATH)
+
+nr_sales_rep = int(config.get("DATA_CONFIG", "NR_SALES_REPS"))
+nr_clients = int(config.get("DATA_CONFIG", "NR_CLIENTS"))
+
+min_drive_dst = int(config.get("DATA_CONFIG", "MAX_DRIVING_DISTANCE"))
 
 # Generating Data
-# sales, clients = generate_data(nr_sales_rep, nr_clients, utah)
+sales, clients = generate_data(nr_sales_rep, nr_clients, south_carolina)
 
-sales, clients = sales_rep_fixed2, clients_fixed2
-
-# Solving the problem
+# Checking if logical requirements are met
 if nr_clients <= 0 or nr_sales_rep <= 0 or min_drive_dst <= 0:
     print("Data does not make sense")
     exit()
 
-# Showing the data in a graph
+# Plotting the data
+visualize_data(sales, clients, south_carolina)
 
-
-indices = list()
-if solve_problem(sales, clients, min_drive_dst, indices) == False:
+indices = (
+    list()
+)  # This list will contain the clients numbers that are impossible to reach with the companys' workforce
+if (
+    solve_problem(sales, clients, min_drive_dst, indices) == False
+):  # False means no solution was found
     print("Treating Data ...")
     indices += data_correction_1(sales, clients, min_drive_dst)
     print("Done! Let's try to solve this problem again...")
