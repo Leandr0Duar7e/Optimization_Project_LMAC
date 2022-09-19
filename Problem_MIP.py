@@ -141,7 +141,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, max_driving_dst, index):
         print(
             f"\nWorkforce optimization from {nbr_sales_rep} to {working_reps} sales representatives."
         )
-        visualize_data(reps_needed, clients, south_carolina)
+        visualize_data(reps_needed, clients, south_carolina)  # Showing results on a map
 
         return x
     else:
