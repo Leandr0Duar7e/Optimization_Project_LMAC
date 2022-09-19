@@ -106,11 +106,13 @@ def solve_problem(sales_rep_fixed, clients_fixed, max_driving_dst, index):
 
     if status == pywraplp.Solver.OPTIMAL or status == pywraplp.Solver.FEASIBLE:
         working_reps = 0
+        reps_needed = list()
         for rep in range(nbr_sales_rep):
             show = 0
             for client in range(nbr_clients):
                 # Testing if x[i,j] is 1(with tolerance for floating point arithmetic)
                 if x[rep, client].solution_value() > 0.5:
+                    reps_needed.append(sales_rep[rep])
                     dst = driving_time(
                         sales_rep[rep][3]["lat"],
                         sales_rep[rep][3]["lon"],
@@ -139,6 +141,7 @@ def solve_problem(sales_rep_fixed, clients_fixed, max_driving_dst, index):
         print(
             f"\nWorkforce optimization from {nbr_sales_rep} to {working_reps} sales representatives."
         )
+        visualize_data(reps_needed, clients, south_carolina)
 
         return x
     else:

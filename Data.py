@@ -90,30 +90,41 @@ def visualize_data(sales_rep, clients, area):
         max(area_latitude),
     )
 
-    # state of utah image
-    # utha = img.imread("utah.png")
-
     # Defining clients and reps coordintes
     clients_lat = list()
     clients_lon = list()
+    ids = list()
     sales_lat = list()
     sales_lon = list()
+    names = list()
     for rep in sales_rep:
+        names.append(rep[0])
         sales_lat.append(rep[3]["lat"])
         sales_lon.append(rep[3]["lon"])
     for client in clients:
+        ids.append(client[0])
         clients_lat.append(client[1]["lat"])
         clients_lon.append(client[1]["lon"])
 
-    im = plt.imread("south_carolina.png")
+    img = plt.imread("south_carolina.png")
 
-    plt.scatter(clients_lon, clients_lat, c="g", marker="X", s=50)
-    plt.scatter(sales_lon, sales_lat, c="b", marker="o", alpha=0.6)
+    fig, ax = plt.subplots(figsize=(12, 10))
+
+    ax.imshow(img, extent=(bbox[0], bbox[1], bbox[2], bbox[3]))
+
+    ax.scatter(clients_lon, clients_lat, c="g", marker="X", s=50)
+    ax.scatter(sales_lon, sales_lat, c="b", marker="o", alpha=0.6)
+
+    # Labeling clients and reps on the map
+    for i, txt in enumerate(ids):
+        ax.annotate(txt, (clients_lon[i], clients_lat[i]))
+
+    for i, txt in enumerate(names):
+        ax.annotate(txt, (sales_lon[i], sales_lat[i]))
 
     plt.title("Sales Reps and Clients locations")
     plt.xlim(bbox[0], bbox[1])
     plt.ylim(bbox[2], bbox[3])
-    plt.imshow(im)
     plt.show()
 
 

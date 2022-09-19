@@ -47,7 +47,6 @@ if (
         print("Treating Data ... \n   This one might take a while!")
         indices += data_correction_2(sales, clients, min_drive_dst)
         print("Done! Let's try to solve this problem again...")
-        # print(indices)
         if solve_problem(sales, clients, min_drive_dst, indices) == False:
             print("The problem is impossible to solve! \n Please review the data.")
 
