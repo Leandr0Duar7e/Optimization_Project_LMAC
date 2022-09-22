@@ -25,6 +25,7 @@ min_drive_dst = int(config.get("DATA_CONFIG", "MAX_DRIVING_DISTANCE"))
 
 # Generating Data
 sales, clients = generate_data(nr_sales_rep, nr_clients, south_carolina)
+# sales, clients = (sales_rep_fixed2, clients_fixed2)
 
 # Checking if logical requirements are met
 if nr_clients <= 0 or nr_sales_rep <= 0 or min_drive_dst <= 0:

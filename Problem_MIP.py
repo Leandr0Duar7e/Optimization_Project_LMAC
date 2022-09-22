@@ -112,7 +112,6 @@ def solve_problem(sales_rep_fixed, clients_fixed, max_driving_dst, index):
             for client in range(nbr_clients):
                 # Testing if x[i,j] is 1(with tolerance for floating point arithmetic)
                 if x[rep, client].solution_value() > 0.5:
-                    reps_needed.append(sales_rep[rep])
                     dst = driving_time(
                         sales_rep[rep][3]["lat"],
                         sales_rep[rep][3]["lon"],
@@ -138,11 +137,11 @@ def solve_problem(sales_rep_fixed, clients_fixed, max_driving_dst, index):
                     show += 1
             if show > 0:
                 working_reps += 1
+                reps_needed.append(sales_rep[rep])
         print(
             f"\nWorkforce optimization from {nbr_sales_rep} to {working_reps} sales representatives."
         )
         visualize_data(reps_needed, clients, south_carolina)  # Showing results on a map
-
         return x
     else:
         print("No solution found.")
