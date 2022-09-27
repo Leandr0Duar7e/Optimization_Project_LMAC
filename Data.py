@@ -9,7 +9,6 @@ import random
 from shapely.geometry import Polygon
 from adittional_functions import *
 import matplotlib.pyplot as plt
-import matplotlib.image as img
 
 
 def generate_data(nr_reps, nr_clients, area):

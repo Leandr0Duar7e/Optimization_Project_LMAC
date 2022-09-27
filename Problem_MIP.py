@@ -138,6 +138,12 @@ def solve_problem(sales_rep_fixed, clients_fixed, max_driving_dst, index):
             if show > 0:
                 working_reps += 1
                 reps_needed.append(sales_rep[rep])
+        if index != []:
+            print(
+                "\n\n !!! The following clients do not satisfy the given constraints. An alternative strategy must be developed to addressed them !!!"
+            )
+            for ind in index:
+                print(f"Client {clients_fixed[ind][0]}")
         print(
             f"\nWorkforce optimization from {nbr_sales_rep} to {working_reps} sales representatives."
         )
