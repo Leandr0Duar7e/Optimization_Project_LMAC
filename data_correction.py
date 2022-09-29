@@ -45,7 +45,7 @@ def data_correction_1(sales_data, clients_data, driving_data):
         ):  # Both conditions to prevent the case that the last rep on the list is within the minimum driving time
             remove_list.append(client)
             print(
-                f"An error was solved!\nClient {client} location is too far to be adressed."
+                f"An exception was found!\nClient {client} location is too far to be adressed.\n"
             )
     return remove_list
 
@@ -113,7 +113,7 @@ def data_correction_2(sales_data, clients_data, driving_data):
                     furthest = client + 1  # keeps the indice of the furthest client
             nr -= 1
             print(
-                f"An error was solved!\nClient {reps_list[rep][furthest]} location is too far to be adressed."
+                f"An exception was found!\nSales Rep {sales_data[rep][0]} has reached its maximum capacity \nClient {reps_list[rep][furthest]} will not be adressed.\n"
             )
             remove_list.append(reps_list[rep].pop(furthest))
     return remove_list
